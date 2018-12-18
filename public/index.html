@@ -18,7 +18,20 @@
         <![endif]-->
         <h1>Hey!</h1>
 
+        <div id="welcomeModal" class="modal">
+            <div class="modal-content">
+                <span class="modal-close">close</span>
+                <h2>Modal</h2>
+            </div>
+        </div>
+
         <script src="js/main.js"></script>
+        <script>
+            document.querySelector('.modal').addEventListener('blur', e => {
+                // implement close
+                // npc.hide(modal_id);
+            });
+        </script>
     </body>
 
 </html>
