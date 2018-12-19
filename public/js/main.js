@@ -1,6 +1,8 @@
 'use strict';
 const npc = (function() {
 
+    const MODAL_DELAY_INTERVAL = 500;
+
     /**
      * Display a modal class
      *
@@ -14,9 +16,7 @@ const npc = (function() {
         if (elem) {
             setTimeout(() => {
                 elem.classList.remove('is-faded');
-            }, 300);
-            elem.classList.remove('is-hidden');
-        } else {
+            }, MODAL_DELAY_INTERVAL);
             console.log(`No element by id '${id}' and 'hidden'`);
         }
     };
@@ -34,7 +34,7 @@ const npc = (function() {
         if (elem) {
             setTimeout(() => {
                 elem.classList.add('is-hidden');
-            }, 300);
+            }, MODAL_DELAY_INTERVAL);
             elem.classList.add('is-faded');
         } else {
             console.error(`No element by id '${id}'!`);
