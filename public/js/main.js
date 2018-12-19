@@ -2,7 +2,7 @@
 const npc = (function() {
 
     /**
-     * Display a modal that had the class 'is-hidden' applied.
+     * Display a modal class
      *
      * @param id {string} - id of the element to display
      * @return
@@ -22,7 +22,7 @@ const npc = (function() {
     };
 
     /**
-     * Hide a modal by applying the is-hidden style tag
+     * Hide a modal class
      *
      * @param id {string} - id of the element to hide
      * @return
