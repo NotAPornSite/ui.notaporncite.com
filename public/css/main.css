@@ -21,6 +21,10 @@
 :root {
     --border-radius-default: 3px;
 
+    --box-shadow-default: 1px 4px 7px var(--gray-90);
+
+    --transition-default: 0.3s ease-out;
+
     /* easy colors */
     --white  : hsl(0, 0%, 100%);
     --gray-10: hsl(0, 0%, 90%);
@@ -38,6 +42,10 @@
 /* Base
  * @see https://smacss.com/book/type-base
  */
+
+html {
+    font-family: sans-serif;
+}
 
 html * {
     box-sizing: border-box;
@@ -59,13 +67,16 @@ body {
 /* Modules
  * @see https://smacss.com/book/type-module
  */
+
+/* Modal */
+
 .modal {
     display: flex;
     justify-content: center;
     align-items: center;
     position: absolute;
     top: 0;
-    background-color: hsla(0, 0%, 0%, 0.3);
+    background-color: hsla(0, 0%, 0%, 0.7);
     width: 100%;
     height: 100%;
 }
@@ -79,7 +90,29 @@ body {
     height: 100%;
     padding: 1em;
     border-radius: var(--border-radius-default);
+    box-shadow: var(--box-shadow-default);
     background-color: var(--white);
+    transition: opacity 0.2s linear, margin-top 0.3s ease-out;
+}
+
+.modal.is-faded .modal-content {
+    opacity: 0;
+    margin-top: -1.5em;
+    transition: opacity 0.2s linear, margin-top 0.3s ease-out;
+}
+
+.modal-close {
+    cursor: pointer;
+    user-select: none;
+    color: var(--gray-30);
+}
+
+.modal-close:hover {
+    color: var(--black);
+}
+
+.modal-close:active {
+    color: var(--gray-50);
 }
 
 
@@ -87,5 +120,10 @@ body {
     .modal-content {
         width: calc(100% - 3em);
         height: calc(100% - 3em);
+    }
+}
+@media screen and (min-width: 800px) {
+    .modal-content {
+        width: 600px;
     }
 }

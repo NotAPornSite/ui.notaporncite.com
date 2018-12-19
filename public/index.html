@@ -20,16 +20,16 @@
 
         <div id="welcomeModal" class="modal">
             <div class="modal-content">
-                <span class="modal-close">close</span>
+                <span class="modal-close" data-target="welcomeModal">close</span>
                 <h2>Modal</h2>
             </div>
         </div>
 
         <script src="js/main.js"></script>
         <script>
-            document.querySelector('.modal').addEventListener('blur', e => {
-                // implement close
-                // npc.hide(modal_id);
+            npc.on('click', npc.q(`#welcomeModal .modal-close`), (e) => {
+                e.preventDefault();
+                npc.hide(e.target.dataset.target); 
             });
         </script>
     </body>

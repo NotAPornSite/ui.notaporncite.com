@@ -1,23 +1,69 @@
 'use strict';
 const npc = (function() {
 
+    /**
+     * Display a modal that had the class 'is-hidden' applied.
+     *
+     * @param id {string} - id of the element to display
+     * @return
+     *
+     * @author NotKeithRichards
+     */
     let show = id => {
         let elem = document.querySelector(`#${id}.is-hidden`);
         if (elem) {
+            setTimeout(() => {
+                elem.classList.remove('is-faded');
+            }, 300);
             elem.classList.remove('is-hidden');
         } else {
             console.log(`No element by id '${id}' and 'hidden'`);
         }
     };
 
+    /**
+     * Hide a modal by applying the is-hidden style tag
+     *
+     * @param id {string} - id of the element to hide
+     * @return
+     *
+     * @author NotKeithRichards
+     */
     let hide = id => {
         let elem = document.querySelector(`#${id}`);
         if (elem) {
-            elem.classList.add('is-hidden');
+            setTimeout(() => {
+                elem.classList.add('is-hidden');
+            }, 300);
+            elem.classList.add('is-faded');
         } else {
             console.error(`No element by id '${id}'!`);
         }
     };
 
-    return { hide, show };
+    /**
+     * Add an event listener for the event and element specified
+     *
+     * @param evt  {string}   - The event to listen for
+     * @param elem {Element}  - The dom node to add the event to
+     * @param cb   {Function} - Callback function to be called when the event it fired
+     * @return
+     *
+     * @author NotKeithRichards
+     */
+    let on = (evt, elem, cb) => {
+        elem.addEventListener(evt, cb);
+    }
+
+    /**
+     * Shorthand for document.querySelector
+     *
+     * @param query {string} - selector
+     * @return {Element} - First element matching provided query if found
+     *
+     * @author NotKeithRichards
+     */
+    let q = query => document.querySelector(query);
+
+    return { hide, show, on, q };
 })();
