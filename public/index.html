@@ -22,17 +22,37 @@
                 <div class="modal-content">
                     <span class="modal-close" data-target="welcomeModal">close</span>
                     <h1 class="modal-title">Horny Wanderer?</h1>
+                    <p>
+                        You can shove all sorts of things in here (wink).
+                    </p>
                 </div>
             </div>
 
-            <h1>Not a Porn-site</h1>
+            <section role="main">
+                <h1>Design Elements for NPC</h1>
+                <h2>Buttons</h2>
+                <p>Favor the following colors, including the default option.</p>
+                <p>
+                    <button>Default</button>
+                    <button class="primary">Primary</button>
+                    <button class="secondary">Secondary</button>
+                    <button class="tertiary">Tertiary</button>
+                </p>
+                <h2>Modals</h2>
+                <p>Click the button below to view the modal</p>
+                <button id="modalBtn">Show modal</button>
+            </section>
         </div>
 
         <script src="js/main.js"></script>
         <script>
-            npc.on('click', npc.q(`#welcomeModal .modal-close`), (e) => {
-                e.preventDefault();
+            const welcomeModal = npc.q(`#welcomeModal .modal-close`);
+            npc.hide('welcomeModal'); 
+            npc.on(welcomeModal, 'click', e => {
                 npc.hide(e.target.dataset.target); 
+            });
+            npc.on(npc.q(`#modalBtn`), 'click', e => {
+                npc.show('welcomeModal');
             });
         </script>
     </body>

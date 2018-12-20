@@ -13,8 +13,7 @@
  * 4. height
  * 5. margin
  * 6. border (color, radius, style, etc.)
- * 7. padding
- * 8. background-color
+ * 7. padding * 8. background-color
  * 9. color
  */
 
@@ -24,6 +23,11 @@
     --box-shadow-default: 1px 4px 7px var(--gray-90);
 
     --transition-default: 0.3s ease-out;
+
+    /* primary color scheme */
+    --primary-color:   #6133FF;
+    --secondary-color: #23FFDA;
+    --tertiary-color: #FF8B45;
 
     /* easy colors */
     --white  : hsl(0, 0%, 100%);
@@ -51,9 +55,6 @@ html * {
     box-sizing: border-box;
 }
 
-body {
-    background-color: var(--gray-10);
-}
 
 /* Typography */
 
@@ -64,6 +65,59 @@ h1, h2, h3, h4, h5, h6
 p {
     color: var(--gray-90);
 }
+
+p, button, span {
+    font-size: 1em;
+}
+
+button {
+    border: none;
+    border-radius: var(--border-radius-default);
+    line-height: 1.3em;
+    padding: 1em 0.8em;
+    background-color: var(--gray-80);
+    outline-color: hsla(0, 0%, 30%, 0.5);
+    color: var(--white);
+    cursor: pointer;
+}
+
+button.primary {
+    background-color: #6133FF;
+    outline-color: #8F6EFF;
+}
+
+button.secondary {
+    background-color: #23FFDA;
+}
+
+button.tertiary {
+    background-color: #FF8B45;
+}
+
+/* Taken from typo-scale.com (major third) */
+
+p {margin-bottom: 1.3em;}
+
+h1, h2, h3, h4 {
+    margin: 1.414em 0 0.5em;
+    font-weight: inherit;
+    line-height: 1.2;
+}
+
+h1 {
+    margin-top: 0;
+    font-size: 2.441em;
+}
+
+h2 {font-size: 1.953em;}
+
+h3 {font-size: 1.563em;}
+
+h4 {font-size: 1.25em;}
+
+small, .font_small {font-size: 0.8em;}
+
+/* END: typo-scale.com */
 
 
 /* Layout
@@ -104,13 +158,13 @@ p {
     padding: 1em;
     box-shadow: var(--box-shadow-default);
     background-color: var(--white);
-    transition: opacity 0.3s linear 0.2s, margin-top 0.4s ease-in;
+    transition: opacity 0.2s linear, margin-top 0.4s ease-in-out;
 }
 
 .modal.is-faded .modal-content {
     opacity: 0;
     margin-top: -5em;
-    transition: opacity 0.3s linear 0.2s, margin-top 0.4s ease-in;
+    transition: opacity 0.2s linear, margin-top 0.4s ease-in-out;
 }
 
 .modal-close {
