@@ -209,11 +209,36 @@ h1.modal-title {
 
 [role="gallery"] {
     display: flex;
-    flex-direction: column;
+    justify-content: flex-start;
 }
 
 .gallery-wrapper {
     border: 1px solid black;
     min-height: 300px;
     width: 100%;
+}
+
+.gallery-item {
+    display: inline-block;
+    max-width: 50%;
+    padding: 0.3em;
+}
+
+.gallery-item img {
+    width: 100%;
+}
+
+@media screen and (min-width: 600px) {
+    .gallery-item {
+        display: inline-block;
+        max-width: 33.333%;
+        padding: 0.3em;
+    }
+}
+@media screen and (min-width: 800px) {
+    .gallery-item {
+        display: inline-block;
+        max-width: 25%;
+        padding: 0.3em;
+    }
 }

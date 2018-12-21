@@ -16,7 +16,7 @@ const express = require('express'),
 // {
 const data    = require('./modules/items.js');
 
-const pageCount = 15;
+const pageCount = 5;
 
 /* END
  * ---
@@ -25,15 +25,16 @@ const pageCount = 15;
  */
 
 const getPage = page => {
-    let start = page*pageCount;
+    let start = page*pageCount, end = start + pageCount;
     if (start > data.length) {
         return [];
     }
     if (start + pageCount > data.length) {
         return data.slice(start);
     }
+    console.log({start, end});
 
-    return data.slice(page*pageCount, (page*pageCount)+pageCount);
+    return data.slice(start, end);
 }
 
 /* END

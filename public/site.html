@@ -19,8 +19,6 @@
         <div class="layout-container">
             <section role="gallery">
                 <div class="gallery-wrapper">
-                    <div class="gallery-item">
-                    </div>
                 </div>
             </section>
         </div>
@@ -30,20 +28,24 @@
         <script src="./js/main.js"></script>
         <script>
             // Kick things off
-            let currentPage = 0;
+            let currentPage = 0, updating = false;
             loadMoreItems();
 
             const galleryWrapper = npc.q('[role="gallery"] .gallery-wrapper');
             // #blameNotPapaFranku
             const sanatize = url => url.replace(/&amp;/g, '&');
 
+            // a fix maybe?
             function loadMoreItems() {
+                updating = true;
                 npc.getItems(currentPage)
                     .then(dat => {
                         dat.forEach(url => {
+                            console.log(sanatize(url));
                             galleryWrapper.appendChild(npc.galleryItem(sanatize(url)));
                         })
                         currentPage += 1;
+                        updating = false;
                     })
                     .catch(err => {
                         console.error(err);
@@ -57,7 +59,9 @@
                 let yFromBottm = document.body.clientHeight - window.scrollY;
 
                 if (yFromBottm <= window.innerHeight * 1.2) {
-                    loadMoreItems();
+                    if (!updating) {
+                        loadMoreItems();
+                    }
                 }
             });
         </script>
