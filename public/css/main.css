@@ -53,6 +53,9 @@ html {
 
 html * {
     box-sizing: border-box;
+
+    /* should REMOVE this */
+    -webkit-tap-highlight-color: hsla(0, 0%, 100%, 0);
 }
 
 
@@ -222,23 +225,41 @@ h1.modal-title {
     display: inline-block;
     max-width: 50%;
     padding: 0.3em;
+    background-color: hsl(0, 0%, 95%);
+    border-radius: var(--border-radius-default);
 }
 
-.gallery-item img {
-    width: 100%;
+.gi-img {
+    position: relative;
+    border-radius: 5px;
+    overflow: hidden;
 }
 
 @media screen and (min-width: 600px) {
     .gallery-item {
-        display: inline-block;
-        max-width: 33.333%;
-        padding: 0.3em;
+        max-width: 33.3333%;
+    }
+    .gi-img {
+        border-radius: 16px;
     }
 }
-@media screen and (min-width: 800px) {
-    .gallery-item {
-        display: inline-block;
-        max-width: 25%;
-        padding: 0.3em;
-    }
+
+.gi-img-overlay {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: hsla(0, 0%, 100%, 0.4);
+    transition: opacity 0.2s ease-in-out;
 }
+
+.gallery-item.is-focused .gi-img-overlay {
+    opacity: 0;
+}
+
+.gi-img img {
+    width: 100%;
+}
+
+
+

@@ -19,6 +19,7 @@
         <div class="layout-container">
             <section role="gallery">
                 <div class="gallery-wrapper">
+                    
                 </div>
             </section>
         </div>
@@ -27,22 +28,17 @@
 
         <script src="./js/main.js"></script>
         <script>
-            // Kick things off
-            let currentPage = 0, updating = false;
-            loadMoreItems();
+            let currentPage = 0;
+            let updating = false;
+            let sanatize = url => url.replace(/&amp;/g, '&');
+            let gallery = new npc.Gallery(npc.q('[role="gallery"] .gallery-wrapper'));
 
-            const galleryWrapper = npc.q('[role="gallery"] .gallery-wrapper');
-            // #blameNotPapaFranku
-            const sanatize = url => url.replace(/&amp;/g, '&');
-
-            // a fix maybe?
             function loadMoreItems() {
                 updating = true;
                 npc.getItems(currentPage)
                     .then(dat => {
                         dat.forEach(url => {
-                            console.log(sanatize(url));
-                            galleryWrapper.appendChild(npc.galleryItem(sanatize(url)));
+                            gallery.addItem(npc.galleryItem(sanatize(url)));
                         })
                         currentPage += 1;
                         updating = false;
@@ -52,18 +48,21 @@
                     });
             }
 
+            // Grab the initial set of items
+            loadMoreItems();
 
 
             window.addEventListener('scroll', e => {
                 // this won't work in IE probs (& also probs a better way)
                 let yFromBottm = document.body.clientHeight - window.scrollY;
-
                 if (yFromBottm <= window.innerHeight * 1.2) {
                     if (!updating) {
                         loadMoreItems();
                     }
                 }
             });
+
+            
         </script>
     </body>
 </html>
