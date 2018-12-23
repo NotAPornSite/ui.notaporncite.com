@@ -13,10 +13,10 @@ require('dotenv').config()
 
 const express = require('express'),
       app     = express();
-// {
+
 const data    = require('./modules/items.js');
 
-const pageCount = 5;
+const pageCount = 15;
 
 /* END
  * ---

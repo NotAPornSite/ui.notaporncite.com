@@ -221,9 +221,18 @@ h1.modal-title {
     width: 100%;
 }
 
+.gallery-column {
+    float: left;
+    width: 50%;
+}
+
+.gallery-column.is-inactive {
+    display: none;
+}
+
 .gallery-item {
     display: inline-block;
-    max-width: 50%;
+    width: 100%;
     padding: 0.3em;
     background-color: hsl(0, 0%, 95%);
     border-radius: var(--border-radius-default);
@@ -231,16 +240,17 @@ h1.modal-title {
 
 .gi-img {
     position: relative;
-    border-radius: 5px;
     overflow: hidden;
 }
 
-@media screen and (min-width: 600px) {
-    .gallery-item {
-        max-width: 33.3333%;
+@media screen and (min-width: 450px) {
+    .gallery-column {
+        width: 33.3333%;
     }
-    .gi-img {
-        border-radius: 16px;
+}
+@media screen and (min-width: 750px) {
+    .gallery-column {
+        width: 25%;
     }
 }
 

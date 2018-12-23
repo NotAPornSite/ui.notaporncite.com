@@ -37,9 +37,7 @@
                 updating = true;
                 npc.getItems(currentPage)
                     .then(dat => {
-                        dat.forEach(url => {
-                            gallery.addItem(npc.galleryItem(sanatize(url)));
-                        })
+                        gallery.addItems(dat);
                         currentPage += 1;
                         updating = false;
                     })
