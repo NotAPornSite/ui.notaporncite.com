@@ -1,0 +1,61 @@
+<!doctype html>
+<html class="no-js" lang="en">
+
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>Site demo</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+        <link rel="stylesheet" href="css/normalize.css">
+        <link rel="stylesheet" href="css/main.css">
+    </head>
+
+    <body>
+        <!--[if lte IE 9]>
+        <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience and security.</p>
+        <![endif]-->
+
+        <p id="message">--</p>
+
+        <div id="tester" style="height: 300px; width: 300px; background-color: hsl(0, 0%, 80%);"></div>
+
+        <script src="./js/main.js"></script>
+        <script>
+            let message = npc.q('#message'),
+                tester  = npc.q('#tester'),
+                events  = {};
+
+            /*
+             */
+
+            let then, now;
+            npc.on(tester, 'touchstart', e => {
+                then = Date.now();
+                events.touchstart = true;
+                update();
+            });
+
+            npc.on(tester, 'select', e => {
+                 now = Date.now();
+                 events.select = now - then;
+                 update();
+            });
+
+            npc.on(tester, 'touchend', e => {
+                events = {};
+                update();
+            })
+            
+
+            function update() {
+                let msgFormatStr = '';
+                for (key in events) {
+                    msgFormatStr += `${key}: ${events[key]}\n`;
+                }
+                message.innerText = msgFormatStr;
+            }
+        </script>
+    </body>
+</html>

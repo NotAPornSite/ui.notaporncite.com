@@ -1,0 +1,66 @@
+<!doctype html>
+<html class="no-js" lang="en">
+
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>Site demo</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+        <link rel="stylesheet" href="css/normalize.css">
+        <link rel="stylesheet" href="css/main.css">
+    </head>
+
+    <body>
+        <!--[if lte IE 9]>
+        <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience and security.</p>
+        <![endif]-->
+        <div class="layout-container">
+            <section role="gallery">
+                <div class="gallery-wrapper">
+                    
+                </div>
+            </section>
+        </div>
+
+        <footer>footer</footer>
+
+        <script src="./js/main.js"></script>
+        <script>
+            let currentPage = 0;
+            let updating = false;
+            let sanatize = url => url.replace(/&amp;/g, '&');
+            let gallery = new npc.Gallery(npc.q('[role="gallery"] .gallery-wrapper'));
+
+            function loadMoreItems() {
+                updating = true;
+                npc.getItems(currentPage)
+                    .then(dat => {
+                        gallery.addItems(dat);
+                        currentPage += 1;
+                        updating = false;
+                    })
+                    .catch(err => {
+                        console.error(err);
+                    });
+            }
+
+            // Grab the initial set of items
+            loadMoreItems();
+
+
+            window.addEventListener('scroll', e => {
+                // this won't work in IE probs (& also probs a better way)
+                let yFromBottm = document.body.clientHeight - window.scrollY;
+                if (yFromBottm <= window.innerHeight * 1.2) {
+                    if (!updating) {
+                        loadMoreItems();
+                    }
+                }
+            });
+
+            
+        </script>
+    </body>
+</html>
