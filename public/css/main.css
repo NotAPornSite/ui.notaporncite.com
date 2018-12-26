@@ -221,18 +221,9 @@ h1.modal-title {
     width: 100%;
 }
 
-.gallery-column {
-    float: left;
-    width: 50%;
-}
-
-.gallery-column.is-inactive {
-    display: none;
-}
-
 .gallery-item {
     display: inline-block;
-    width: 100%;
+    width: 50%;
     padding: 0.3em;
     background-color: hsl(0, 0%, 95%);
     border-radius: var(--border-radius-default);
@@ -244,12 +235,12 @@ h1.modal-title {
 }
 
 @media screen and (min-width: 450px) {
-    .gallery-column {
+    .gallery-item {
         width: 33.3333%;
     }
 }
 @media screen and (min-width: 750px) {
-    .gallery-column {
+    .gallery-item {
         width: 25%;
     }
 }

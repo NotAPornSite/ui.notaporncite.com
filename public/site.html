@@ -28,34 +28,140 @@
 
         <script src="./js/main.js"></script>
         <script>
+            let galleryWrapper = npc.q('.gallery-wrapper');
+
             let currentPage = 0;
             let updating = false;
             let sanatize = url => url.replace(/&amp;/g, '&');
-            let gallery = new npc.Gallery(npc.q('[role="gallery"] .gallery-wrapper'));
+            //let gallery = new npc.Gallery(npc.q('[role="gallery"] .gallery-wrapper'));
 
+            let galleryOrder = {}, galleryData = {}, galleryTotal = 0;
+            let previousBreakpoint = npc.getBreakpoint();
+            console.log(previousBreakpoint);
+
+            let getRows = () => Math.floor(galleryTotal / previousBreakpoint);
+            let getStart = () => galleryTotal - (getRows() * previousBreakpoint);
+
+            // something like an n time operation?
             function loadMoreItems() {
                 updating = true;
                 npc.getItems(currentPage)
                     .then(dat => {
-                        gallery.addItems(dat);
+                        dat.forEach( (datum, i) => {
+                            let rows = `${getRows()}`, cols = `${getStart()}`, key;
+                            key = `${rows},${cols}`, img = new Image();
+                            galleryOrder[key] = {num: i, loaded: false};
+                            img.onload = function() {
+                                galleryOrder[key].img = this;
+                                galleryOrder[key].loaded = true;
+
+                                galleryData[`${rows}`] = galleryData[`${rows}`] || getAdjustedHeight(this);
+                                if (galleryData[`${rows}`] < getAdjustedHeight(this)) {
+                                    galleryData[`${rows}`] = getAdjustedHeight(this);
+                                }
+                            }
+                            img.src = sanatize(datum).trim();
+
+                            galleryTotal += 1;
+                        })
                         currentPage += 1;
                         updating = false;
+
+                        adjustMargins();
                     })
                     .catch(err => {
                         console.error(err);
                     });
             }
 
-            // Grab the initial set of items
-            loadMoreItems();
+            // something like an n time operation?
+            function adjustMargins() {
+                if (!getLoaded()) {
+                    console.log('loading...') // is this hacky?
+                    setTimeout(adjustMargins, 500);
+                } else {
+                    console.log('all loaded!');
+                    for (let key in galleryOrder) {
+                        let rowCol = key.split(','),
+                            aboveItem = galleryOrder[`${rowCol[0]-1},${rowCol[1]}`],
+                            belowItem = galleryOrder[`${parseInt(rowCol[0])+1},${rowCol[1]}`];
 
+                        // have to figure out ratio...
+                        galleryOrder[key].yOffset = galleryOrder[key].yOffset || 0;
+                        if (aboveItem) {
+                            galleryOrder[key].yOffset += (galleryData[`${rowCol[0]-1}`] - getAdjustedHeight(aboveItem.img)) + (galleryData[`${rowCol[0]}`] - getAdjustedHeight(galleryOrder[key].img));
+                        } else {
+                            // first row
+                            galleryOrder[key].yOffset += galleryData['0'] - getAdjustedHeight(galleryOrder[key].img);
+                        }
+                        if (aboveItem && belowItem) {
+                            //belowItem.yOffset = galleryOrder[key].yOffset;
+                        }
+                    }
+                    appendToDocument();
+                }
+            }
+
+            function appendToDocument() {
+                for (let key in galleryOrder) {
+                    const item = getItem(galleryOrder[key].img);
+                    item.style.transform = `translateY(-${galleryOrder[key].yOffset}px)`;
+                    npc.q('.gallery-wrapper').appendChild(item);
+                }
+            }
+
+            function getItem(img) {
+                const construct = npc.pipe(
+                                        npc.addClass('gallery-item'),
+                                        npc.addChild(
+                                            npc.pipe(
+                                                npc.addClass('gi-img'),
+                                                npc.addChild(img),
+                                                npc.addChild(npc.pipe(npc.addClass('gi-img-overlay'))(npc.div()))
+                                            )(npc.div())
+                                        ),
+                                        npc.addChild( npc.pipe(npc.addClass('gi-content'))(npc.div()) )
+                                    );
+                return construct(npc.div());
+            }
+
+            function getLoaded() {
+                let allLoaded = true;
+                for (let key in galleryOrder) {
+                    allLoaded = allLoaded && galleryOrder[key].loaded;
+                }
+                return allLoaded;
+            }
+
+            function getAdjustedHeight(img) {
+                let adjWidth  = (galleryWrapper.clientWidth / previousBreakpoint);
+                let orgWidth  = img.width;
+                let orgHeight = img.height;
+                return (adjWidth*orgHeight) / orgWidth; 
+            }
+
+            // Grab the initial set of items
+            // here also we should do the spnner loader
+            loadMoreItems();
+            
+
+            npc.on(window, 'resize', e => {
+                let currentBreakpoint = npc.getBreakpoint();
+                if (previousBreakpoint != currentBreakpoint) {
+                    // do the things
+                    console.log(`resize: ${currentBreakpoint}`);
+
+                    
+                    previousBreakpoint = currentBreakpoint;
+                }
+            });
 
             window.addEventListener('scroll', e => {
                 // this won't work in IE probs (& also probs a better way)
                 let yFromBottm = document.body.clientHeight - window.scrollY;
                 if (yFromBottm <= window.innerHeight * 1.2) {
                     if (!updating) {
-                        loadMoreItems();
+                        //loadMoreItems();
                     }
                 }
             });
