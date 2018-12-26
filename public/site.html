@@ -83,19 +83,14 @@
                     console.log('all loaded!');
                     for (let key in galleryOrder) {
                         let rowCol = key.split(','),
-                            aboveItem = galleryOrder[`${rowCol[0]-1},${rowCol[1]}`],
-                            belowItem = galleryOrder[`${parseInt(rowCol[0])+1},${rowCol[1]}`];
-
+                            aboveItem = galleryOrder[`${rowCol[0]-1},${rowCol[1]}`];
                         // have to figure out ratio...
                         galleryOrder[key].yOffset = galleryOrder[key].yOffset || 0;
                         if (aboveItem) {
-                            galleryOrder[key].yOffset += (galleryData[`${rowCol[0]-1}`] - getAdjustedHeight(aboveItem.img)) + (galleryData[`${rowCol[0]}`] - getAdjustedHeight(galleryOrder[key].img));
+                            galleryOrder[key].yOffset += (galleryData[`${rowCol[0]}`] - getAdjustedHeight(galleryOrder[key].img)) + aboveItem.yOffset;
                         } else {
                             // first row
                             galleryOrder[key].yOffset += galleryData['0'] - getAdjustedHeight(galleryOrder[key].img);
-                        }
-                        if (aboveItem && belowItem) {
-                            //belowItem.yOffset = galleryOrder[key].yOffset;
                         }
                     }
                     appendToDocument();
