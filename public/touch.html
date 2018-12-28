@@ -22,8 +22,6 @@
         <div id="tester" style="height: 300px; width: 300px; background-color: hsl(0, 0%, 80%);"></div>
 
         <script src="./js/main.js"></script>
-        <script src="./js/util.js"></script>
-        <script src="./js/gallery.js"></script>
         <script>
             let message = npc.q('#message'),
                 tester  = npc.q('#tester'),
@@ -32,6 +30,24 @@
             function createElement(type, attrs, children) {
 
             }
+            /*
+             * some experimenting with promises
+             */
+            function fnOne(pipe) {
+                return new Promise((resolve, reject) => {
+                    setTimeout(() => resolve(pipe + 'first,'), 2000);
+                })
+            }
+
+            function fnTwo(pipe) {
+                return new Promise((resolve, reject) => {
+                    setTimeout(() => resolve(pipe + 'secon,'), 2000);
+                })
+            }
+
+            // do the things
+            fnOne(';)>').then(pipe => fnTwo(pipe)).then(pipe => console.log(`${pipe} finale`));
+
             /*
              */
 

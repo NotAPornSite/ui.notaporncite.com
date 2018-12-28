@@ -28,81 +28,60 @@
 
         <script src="./js/main.js"></script>
         <script>
-            let galleryWrapper = npc.q('.gallery-wrapper');
+            const galleryWrapper = npc.q('.gallery-wrapper');
+            const sanatize = url => url.replace(/&amp;/g, '&');
 
             let currentPage = 0;
             let updating = false;
-            let sanatize = url => url.replace(/&amp;/g, '&');
-            //let gallery = new npc.Gallery(npc.q('[role="gallery"] .gallery-wrapper'));
 
-            let galleryOrder = {}, galleryData = {}, galleryTotal = 0;
+            let galleryOrder = {}, items = [];
             let previousBreakpoint = npc.getBreakpoint();
-            console.log(previousBreakpoint);
-
-            let getRows = () => Math.floor(galleryTotal / previousBreakpoint);
-            let getStart = () => galleryTotal - (getRows() * previousBreakpoint);
 
             // something like an n time operation?
-            function loadMoreItems() {
+            // consists of
+            // - updating the state of the page
+            // - then, getting items
+            // - updating.
+            loadItemsAndUpdate();
+
+            function loadItemsAndUpdate() {
                 updating = true;
-                npc.getItems(currentPage)
-                    .then(dat => {
-                        dat.forEach( (datum, i) => {
-                            let rows = `${getRows()}`, cols = `${getStart()}`, key;
-                            key = `${rows},${cols}`, img = new Image();
-                            galleryOrder[key] = {num: i, loaded: false};
-                            img.onload = function() {
-                                galleryOrder[key].img = this;
-                                galleryOrder[key].loaded = true;
+                loadItems().then(items => {
+                    reflow();
+                    appendToDom();
+                    updating = false;
+                });
+            }
+            
 
-                                galleryData[`${rows}`] = galleryData[`${rows}`] || getAdjustedHeight(this);
-                                if (galleryData[`${rows}`] < getAdjustedHeight(this)) {
-                                    galleryData[`${rows}`] = getAdjustedHeight(this);
-                                }
-                            }
-                            img.src = sanatize(datum).trim();
-
-                            galleryTotal += 1;
+            function loadItems() {
+                return new Promise((resolve, reject) => {
+                    npc.getItems(currentPage).then(dat => {
+                        dat.forEach(url => {
+                            createItem(sanatize(url)).then(item => {
+                                item.loading = false
+                            });
                         })
-                        currentPage += 1;
-                        updating = false;
-
-                        adjustMargins();
+                        resolveItemsOrWait(resolve)();
                     })
-                    .catch(err => {
-                        console.error(err);
-                    });
+                })
             }
 
-            // something like an n time operation?
-            function adjustMargins() {
-                if (!getLoaded()) {
-                    console.log('loading...') // is this hacky?
-                    setTimeout(adjustMargins, 500);
-                } else {
-                    console.log('all loaded!');
-                    for (let key in galleryOrder) {
-                        let rowCol = key.split(','),
-                            aboveItem = galleryOrder[`${rowCol[0]-1},${rowCol[1]}`];
-                        // have to figure out ratio...
-                        galleryOrder[key].yOffset = galleryOrder[key].yOffset || 0;
-                        if (aboveItem) {
-                            galleryOrder[key].yOffset += (galleryData[`${rowCol[0]}`] - getAdjustedHeight(galleryOrder[key].img)) + aboveItem.yOffset;
-                        } else {
-                            // first row
-                            galleryOrder[key].yOffset += galleryData['0'] - getAdjustedHeight(galleryOrder[key].img);
-                        }
-                    }
-                    appendToDocument();
-                }
-            }
-
-            function appendToDocument() {
-                for (let key in galleryOrder) {
-                    const item = getItem(galleryOrder[key].img);
-                    item.style.transform = `translateY(-${galleryOrder[key].yOffset}px)`;
-                    npc.q('.gallery-wrapper').appendChild(item);
-                }
+            function createItem(src) {
+                return new Promise((resolve, reject) => {
+                    (function(img) {
+                        let item = {
+                            domNode: getItem(img),
+                            img: img,
+                            loading: true
+                        };
+                        items.push(item);
+                        npc.on(img, 'load', function(e) {
+                            resolve(item);
+                        });
+                        img.src = src;
+                    })(new Image());
+                });
             }
 
             function getItem(img) {
@@ -120,33 +99,40 @@
                 return construct(npc.div());
             }
 
-            function getLoaded() {
-                let allLoaded = true;
-                for (let key in galleryOrder) {
-                    allLoaded = allLoaded && galleryOrder[key].loaded;
+            function resolveItemsOrWait(resolve) {
+                return () => {
+                    let loading = false;
+                    items.forEach(item => loading = loading || item.loading);
+                    if (loading)
+                        setTimeout(resolveItemsOrWait(resolve), 500);
+                    else
+                        resolve(items);
                 }
-                return allLoaded;
             }
 
-            function getAdjustedHeight(img) {
-                let adjWidth  = (galleryWrapper.clientWidth / previousBreakpoint);
-                let orgWidth  = img.width;
-                let orgHeight = img.height;
-                return (adjWidth*orgHeight) / orgWidth; 
+            function reflow() {
+                assignOrder();
+                adjustColumns();
             }
 
-            // Grab the initial set of items
-            // here also we should do the spnner loader
-            loadMoreItems();
-            
+            function assignOrder() {
+                galleryOrder = {};
+                items.forEach((item, i) => {
+                    let row = Math.floor((items.length + i) / previousBreakpoint);
+                    let col = (items.length + i) % previousBreakpoint;
+                    galleryOrder[`${row},${col}`] = item;
+                });
+            }
+
+            function appendToDom() {
+                items.forEach(item => {
+                })
+            }
 
             npc.on(window, 'resize', e => {
                 let currentBreakpoint = npc.getBreakpoint();
-                if (previousBreakpoint != currentBreakpoint) {
-                    // do the things
-                    console.log(`resize: ${currentBreakpoint}`);
 
-                    
+                if (previousBreakpoint != currentBreakpoint) {
                     previousBreakpoint = currentBreakpoint;
                 }
             });
