@@ -15,7 +15,7 @@ const express = require('express'),
       app     = express(),
       db      = require('./modules/db.js');
 
-const data    = require('./modules/items.js');
+const Resource = require('./modules/Resource.js');
 
 const pageCount = 15;
 
@@ -25,18 +25,7 @@ const pageCount = 15;
  * Auxiliary functions
  */
 
-const getPage = page => {
-    let start = page*pageCount, end = start + pageCount;
-    if (start > data.length) {
-        return [];
-    }
-    if (start + pageCount > data.length) {
-        return data.slice(start);
-    }
-    console.log({start, end});
 
-    return data.slice(start, end);
-}
 
 /* END
  * ---
@@ -48,13 +37,13 @@ app.use('/', express.static('./public'));
 
 app.get('/items', async (req, res) => {
     let page = req.query.page || 0;
-    try {
-        let results = await db.getResources(page);
-        res.json(results.map(item => item.url));
-    } catch (err) {
-        console.error(err);
-        res.json({errors: [err]}); // should error handle on client side...
-    }
+    Resource.query()
+        .orderBy('id', 'desc')
+        .limit(pageCount)
+        .offset(pageCount*page)
+        .then(items => {
+            res.json(items);
+        })
 });
 
 // LETS GO
