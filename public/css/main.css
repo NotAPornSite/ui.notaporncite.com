@@ -216,33 +216,30 @@ h1.modal-title {
 }
 
 .gallery-wrapper {
+    display: flex;
     border: 1px solid black;
     min-height: 300px;
     width: 100%;
 }
 
+.gallery-column.is-active {
+    display: block;
+    flex-grow: 1;
+}
+
+.gallery-column {
+    display: none;
+}
+
 .gallery-item {
-    display: inline-block;
-    width: 50%;
+    display: block;
     padding: 0.3em;
     background-color: hsl(0, 0%, 95%);
-    border-radius: var(--border-radius-default);
 }
 
 .gi-img {
     position: relative;
     overflow: hidden;
-}
-
-@media screen and (min-width: 450px) {
-    .gallery-item {
-        width: 33.3333%;
-    }
-}
-@media screen and (min-width: 750px) {
-    .gallery-item {
-        width: 25%;
-    }
 }
 
 .gi-img-overlay {

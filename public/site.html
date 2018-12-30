@@ -19,7 +19,10 @@
         <div class="layout-container">
             <section role="gallery">
                 <div class="gallery-wrapper">
-                    
+                    <div class="gallery-column"></div>
+                    <div class="gallery-column"></div>
+                    <div class="gallery-column"></div>
+                    <div class="gallery-column"></div>
                 </div>
             </section>
         </div>
@@ -37,18 +40,13 @@
             let galleryOrder = {}, items = [];
             let previousBreakpoint = npc.getBreakpoint();
 
-            // something like an n time operation?
-            // consists of
-            // - updating the state of the page
-            // - then, getting items
-            // - updating.
+            // Kick things off
             loadItemsAndUpdate();
 
             function loadItemsAndUpdate() {
                 updating = true;
                 loadItems().then(items => {
                     reflow();
-                    appendToDom();
                     updating = false;
                 });
             }
@@ -62,6 +60,7 @@
                                 item.loading = false
                             });
                         })
+                        currentPage += 1;
                         resolveItemsOrWait(resolve)();
                     })
                 })
@@ -118,15 +117,38 @@
             function assignOrder() {
                 galleryOrder = {};
                 items.forEach((item, i) => {
-                    let row = Math.floor((items.length + i) / previousBreakpoint);
-                    let col = (items.length + i) % previousBreakpoint;
+                    let row = Math.floor(i / previousBreakpoint);
+                    let col = i % previousBreakpoint;
                     galleryOrder[`${row},${col}`] = item;
                 });
             }
 
-            function appendToDom() {
-                items.forEach(item => {
-                })
+            function adjustColumns() {
+                let columns = galleryWrapper.querySelectorAll('.gallery-column'),
+                    rowCol;
+
+                // first need to adjust active/inactive
+                for (let i = 0; i < columns.length; i++) {
+                    console.log(previousBreakpoint);
+                    if (i < previousBreakpoint) {
+                        columns[i].classList.add('is-active');
+                    } else {
+                        columns[i].classList.remove('is-active');
+                    }
+                }
+
+                // next, adjust the items for the columns
+                for (let key in galleryOrder) {
+                    rowCol = key.split(',');
+                    console.log(rowCol);
+                    let targetCol = columns[parseInt(rowCol[1])],
+                        targetRow;
+                    if (targetRow = targetCol.children[parseInt(rowCol[0])]) {
+                        targetCol.replaceChild(galleryOrder[key].domNode, targetRow);
+                    } else {
+                        targetCol.appendChild(galleryOrder[key].domNode);
+                    }
+                }
             }
 
             npc.on(window, 'resize', e => {
@@ -134,6 +156,7 @@
 
                 if (previousBreakpoint != currentBreakpoint) {
                     previousBreakpoint = currentBreakpoint;
+                    reflow();
                 }
             });
 
@@ -142,7 +165,7 @@
                 let yFromBottm = document.body.clientHeight - window.scrollY;
                 if (yFromBottm <= window.innerHeight * 1.2) {
                     if (!updating) {
-                        //loadMoreItems();
+                        loadItemsAndUpdate();
                     }
                 }
             });
