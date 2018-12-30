@@ -217,7 +217,6 @@ h1.modal-title {
 
 .gallery-wrapper {
     display: flex;
-    border: 1px solid black;
     min-height: 300px;
     width: 100%;
 }
@@ -247,7 +246,7 @@ h1.modal-title {
     top: 0;
     width: 100%;
     height: 100%;
-    background-color: hsla(0, 0%, 100%, 0.4);
+    background-color: hsla(0, 0%, 100%, 0.1);
     transition: opacity 0.2s ease-in-out;
 }
 

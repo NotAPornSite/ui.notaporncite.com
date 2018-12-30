@@ -24,6 +24,12 @@ const npc = (function() {
 
     let img = () => document.createElement('img');
 
+    let p   = text => {
+        let dom = document.createElement('p');
+        dom.appendChild(document.createTextNode(text));
+        return dom;
+    }
+
     let addClass = clazz => { return elem => elem.classList.add(clazz) };
 
     let rmClass  = clazz => { return elem => elem.classList.remove(clazz) };
@@ -104,6 +110,7 @@ const npc = (function() {
         q,
         div,
         img,
+        p,
         getItems,
         getBreakpoint,
         addClass,
