@@ -16,16 +16,14 @@
         <!--[if lte IE 9]>
         <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience and security.</p>
         <![endif]-->
-        <div class="layout-container">
-            <section role="gallery">
-                <div class="gallery-wrapper">
-                    <div class="gallery-column"></div>
-                    <div class="gallery-column"></div>
-                    <div class="gallery-column"></div>
-                    <div class="gallery-column"></div>
-                </div>
-            </section>
-        </div>
+        <section role="gallery">
+            <div class="gallery-wrapper">
+                <div class="gallery-column"></div>
+                <div class="gallery-column"></div>
+                <div class="gallery-column"></div>
+                <div class="gallery-column"></div>
+            </div>
+        </section>
 
         <footer>footer</footer>
 
@@ -45,7 +43,8 @@
 
             function loadItemsAndUpdate() {
                 updating = true;
-                loadItems().then(items => {
+                loadItems().then(() => {
+                    console.log('happend');
                     reflow();
                     updating = false;
                 });
@@ -57,19 +56,32 @@
                     npc.getItems(currentPage).then(dat => {
                         dat.forEach(item => {
                             createItem(item).then(instance => {
-                                instance.loading = false
+                                item.loading = 0;
                             });
                         })
                         currentPage += 1;
-                        resolveItemsOrWait(resolve)();
+                        resolveWhenTrue(getLoaded, resolve)();
                     })
                 })
+            }
+
+            function resolveWhenTrue(fn, resolve) {
+                return () => {
+                    fn() ? resolve() : setTimeout(resolveWhenTrue(fn, resolve), 500);
+                }
+            }
+
+            function getLoaded() {
+                let loaded = 0 === items.reduce((accum, current) => accum += current.loading, 0);
+                console.log({items});
+                console.log({loaded});
+                return loaded;
             }
 
             function createItem(item) {
                 return new Promise((resolve, reject) => {
                     (function(img) {
-                        Object.assign(item, {img: img, loading: true});
+                        Object.assign(item, {img: img, loading: 1});
                         item.domNode = getItem(item);
                         items.push(item);
                         npc.on(img, 'load', function(e) {
@@ -93,7 +105,23 @@
                                         npc.addChild(
                                             npc.pipe(
                                                 npc.addClass('gi-content'),
-                                                npc.addChild(npc.p(item.source.split('/').pop()))
+                                                npc.addChild(
+                                                    npc.pipe(
+                                                        npc.addChild(npc.a('reddit', '#'))
+                                                    )(npc.p('source: '))
+                                                ),
+                                                npc.addChild(
+                                                    npc.pipe(
+                                                        npc.addClass('tag'),
+                                                        npc.addClass('font-small')
+                                                    )(npc.span('coolbois'))
+                                                ),
+                                                npc.addChild(
+                                                    npc.pipe(
+                                                        npc.addClass('tag'),
+                                                        npc.addClass('font-small')
+                                                    )(npc.span('notporn'))
+                                                )
                                             )(npc.div())
                                         )
                                     );
@@ -141,7 +169,6 @@
                 // next, adjust the items for the columns
                 for (let key in galleryOrder) {
                     rowCol = key.split(',');
-                    console.log(rowCol);
                     let targetCol = columns[parseInt(rowCol[1])],
                         targetRow;
                     if (targetRow = targetCol.children[parseInt(rowCol[0])]) {

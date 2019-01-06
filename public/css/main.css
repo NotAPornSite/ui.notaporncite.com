@@ -26,6 +26,7 @@
 
     /* primary color scheme */
     --primary-color:   #6133FF;
+    --primary-color-border:   rgb(124, 85, 255);
     --secondary-color: #23FFDA;
     --tertiary-color: #FF8B45;
 
@@ -97,6 +98,16 @@ button.tertiary {
     background-color: #FF8B45;
 }
 
+a {
+    color: rgb(85, 110, 255);
+    text-decoration: none;
+    transition: color 0.2s ease-in;
+}
+
+a:hover {
+    color: rgb(56, 83, 238);
+}
+
 /* Taken from typo-scale.com (major third) */
 
 p {margin-bottom: 1.3em;}
@@ -118,7 +129,7 @@ h3 {font-size: 1.563em;}
 
 h4 {font-size: 1.25em;}
 
-small, .font_small {font-size: 0.8em;}
+small, .font-small {font-size: 0.8em;}
 
 /* END: typo-scale.com */
 
@@ -213,6 +224,7 @@ h1.modal-title {
 [role="gallery"] {
     display: flex;
     justify-content: flex-start;
+    background-color: hsl(0, 0%, 90%);
 }
 
 .gallery-wrapper {
@@ -223,17 +235,20 @@ h1.modal-title {
 
 .gallery-column.is-active {
     display: block;
-    flex-grow: 1;
 }
 
 .gallery-column {
     display: none;
+    padding: 5px;
 }
 
 .gallery-item {
     display: block;
-    padding: 0.3em;
-    background-color: hsl(0, 0%, 95%);
+    padding: 0.67em;
+    max-width: 100%;
+    margin-bottom: 13px;
+    background-color: var(--white);
+    box-shadow: 0 3px 2px hsl(0, 0%, 10%, 0.13);
 }
 
 .gi-img {
@@ -256,6 +271,29 @@ h1.modal-title {
 
 .gi-img img {
     width: 100%;
+    border-radius: 9px;
+}
+
+.gi-content {
+    padding-bottom: 0.5em;
+}
+
+.gi-content span.tag {
+    background: rgb(97,51,255);
+    background: linear-gradient(139deg, rgba(97,51,255,1) 0%, rgba(128,91,255,1) 100%);
+    color: var(--white);
+    border-radius: 7px;
+    margin-right: 6px;
+    padding: 5px;
+    letter-spacing: 2px;
+    font-weight: 200;
+    border: 2px solid rgb(98, 51, 253);
+    box-shadow: 1px 2px 2px hsl(0, 0%, 10%, 0.2);
+    cursor: pointer;
+}
+
+.gi-content span.tag:hover {
+    box-shadow: 1px 2px 2px hsl(0, 0%, 0%, 0.3);
 }
 
 

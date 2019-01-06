@@ -20,6 +20,12 @@ const npc = (function() {
 
     /* elements */
 
+    let span = text => {
+        let dom = document.createElement('span');
+        dom.appendChild(document.createTextNode(text));
+        return dom;
+    };
+
     let div = () => document.createElement('div');
 
     let img = () => document.createElement('img');
@@ -28,7 +34,14 @@ const npc = (function() {
         let dom = document.createElement('p');
         dom.appendChild(document.createTextNode(text));
         return dom;
-    }
+    };
+    
+    let a   = (text, href) => {
+        let dom = document.createElement('a');
+        dom.appendChild(document.createTextNode(text));
+        dom.href = href;
+        return dom;
+    };
 
     let addClass = clazz => { return elem => elem.classList.add(clazz) };
 
@@ -110,7 +123,9 @@ const npc = (function() {
         q,
         div,
         img,
+        span,
         p,
+        a,
         getItems,
         getBreakpoint,
         addClass,

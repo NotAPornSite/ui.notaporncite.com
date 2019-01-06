@@ -12,8 +12,7 @@ require('dotenv').config()
  */
 
 const express = require('express'),
-      app     = express(),
-      db      = require('./modules/db.js');
+      app     = express();
 
 const Resource = require('./modules/Resource.js');
 
@@ -38,6 +37,7 @@ app.use('/', express.static('./public'));
 app.get('/items', async (req, res) => {
     let page = req.query.page || 0;
     Resource.query()
+        .where('type', '=', 'image')
         .orderBy('id', 'desc')
         .limit(pageCount)
         .offset(pageCount*page)
