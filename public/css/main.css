@@ -222,13 +222,11 @@ h1.modal-title {
  */
 
 [role="gallery"] {
-    display: flex;
-    justify-content: flex-start;
-    background-color: hsl(0, 0%, 90%);
+    background-color: hsl(0, 0%, 97%);
+    overflow: auto;
 }
 
 .gallery-wrapper {
-    display: flex;
     min-height: 300px;
     width: 100%;
 }
@@ -239,16 +237,30 @@ h1.modal-title {
 
 .gallery-column {
     display: none;
+    float: left;
     padding: 5px;
+    width: 100%;
+    max-width: 50%;
 }
 
+@media screen and (min-width: 450px) {
+    .gallery-column {
+        max-width: 33.3333%;
+    }
+}
+@media screen and (min-width: 750px) {
+    .gallery-column {
+        max-width: 25%;
+    }
+}
+
+
 .gallery-item {
-    display: block;
-    padding: 0.67em;
+    padding: 0.3333em;
     max-width: 100%;
     margin-bottom: 13px;
     background-color: var(--white);
-    box-shadow: 0 3px 2px hsl(0, 0%, 10%, 0.13);
+    box-shadow: 0 2px 3px -1px hsl(0, 0%, 10%, 0.13);
 }
 
 .gi-img {

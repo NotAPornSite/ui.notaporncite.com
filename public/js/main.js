@@ -45,8 +45,6 @@ const npc = (function() {
 
     let addClass = clazz => { return elem => elem.classList.add(clazz) };
 
-    let rmClass  = clazz => { return elem => elem.classList.remove(clazz) };
-
     let addChild = child => { return elem => elem.appendChild(child) };
 
 
@@ -115,6 +113,41 @@ const npc = (function() {
         return !bp ? (window.innerWidth >= 1000 ? 4 : 2) : bp;
     }
 
+    let item = itemData => {
+        const construct = npc.pipe(
+            npc.addClass('gallery-item'),
+            npc.addChild(
+                npc.pipe(
+                    npc.addClass('gi-img'),
+                    npc.addChild(itemData.img),
+                    npc.addChild(npc.pipe(npc.addClass('gi-img-overlay'))(npc.div()))
+                )(npc.div())
+            ),
+            npc.addChild(
+                npc.pipe(
+                    npc.addClass('gi-content'),
+                    npc.addChild(
+                        npc.pipe(
+                            npc.addChild(npc.a('reddit', '#'))
+                        )(npc.p('source: '))
+                    ),
+                    npc.addChild(
+                        npc.pipe(
+                            npc.addClass('tag'),
+                            npc.addClass('font-small')
+                        )(npc.span('coolbois'))
+                    ),
+                    npc.addChild(
+                        npc.pipe(
+                            npc.addClass('tag'),
+                            npc.addClass('font-small')
+                        )(npc.span('notporn'))
+                    )
+                )(npc.div())
+            )
+        );
+        return construct(div());
+    };
 
     return {
         hide,
@@ -130,6 +163,7 @@ const npc = (function() {
         getBreakpoint,
         addClass,
         addChild,
+        item,
         pipe
     };
 })();
