@@ -130,18 +130,6 @@ const npc = (function() {
                         npc.pipe(
                             npc.addChild(npc.a('reddit', '#'))
                         )(npc.p('source: '))
-                    ),
-                    npc.addChild(
-                        npc.pipe(
-                            npc.addClass('tag'),
-                            npc.addClass('font-small')
-                        )(npc.span('coolbois'))
-                    ),
-                    npc.addChild(
-                        npc.pipe(
-                            npc.addClass('tag'),
-                            npc.addClass('font-small')
-                        )(npc.span('notporn'))
                     )
                 )(npc.div())
             )

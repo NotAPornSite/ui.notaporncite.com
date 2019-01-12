@@ -16,6 +16,10 @@
         <!--[if lte IE 9]>
         <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience and security.</p>
         <![endif]-->
+        <div class="gp-backdrop is-hidden">
+            <a class="action-close" href="#">close</a>
+            <img/>
+        </div>
         <section role="gallery" class="layout-container">
             <div class="gallery-wrapper">
                 <div class="gallery-column"></div>
@@ -132,6 +136,39 @@
                     }
                 }
             }
+
+            npc.on(galleryWrapper, 'click', e => {
+                if (e.target.src) {
+                    let galleryItem = e.target,
+                        galleryPopup = npc.q('.gp-backdrop');
+                        targetWidth = 1,
+                        targetHeight = targetWidth * (galleryItem.height / galleryItem.width);
+                    
+                    galleryPopup.classList.remove('is-hidden');
+                    npc.q('html').classList.add('no-scroll');
+                    while (targetHeight < window.innerHeight * 0.8
+                        && targetWidth < window.innerWidth * 0.8) {
+                        targetWidth += 1;
+                        targetHeight = targetWidth * (galleryItem.height / galleryItem.width);
+                    }
+                    let newImage = new Image();
+                    let oldImage = galleryPopup.querySelector('img');
+                    newImage.addEventListener('load', e => {
+                        galleryPopup.replaceChild(newImage, oldImage)
+                    });
+                    newImage.src = galleryItem.src;
+                    newImage.height = targetHeight;
+                }
+            })
+
+            npc.on(npc.q('.action-close'), 'click', e => {
+                e.preventDefault();
+                let galleryPopup = npc.q('.gp-backdrop'),
+                    galleryImage = galleryPopup.querySelector('img');
+                galleryPopup.classList.add('is-hidden');
+                npc.q('html').classList.remove('no-scroll');
+                galleryPopup.replaceChild(npc.img(), galleryImage);
+            })
 
             npc.on(window, 'resize', e => {
                 let currentBreakpoint = npc.getBreakpoint();
