@@ -16,18 +16,19 @@
         <!--[if lte IE 9]>
         <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience and security.</p>
         <![endif]-->
-        <div class="gp-backdrop is-hidden">
-            <div class="gp-img">
+        <div class="gallery-popup is-hidden">
+            <div class="gp-content">
                 <div class="gp-img-wrap">
                     <img/>
                 </div>
-                <div class="gp-img-actions">
-                    <a data-action="download" href="#">download</a>
-                    <a data-action="save" href="#">save</a>
+                <div class="controls">
                     <a data-action="close" href="#">close</a>
+                    <a href="#">download</a>
+                    <a href="#">save</a>
                 </div>
             </div>
         </div>
+
         <section role="gallery" class="layout-container">
             <div class="gallery-wrapper">
                 <div class="gallery-column"></div>
@@ -165,10 +166,10 @@
 
                     // check if overflow is required
                     if (targetHeight < targetImage.height) {
-                        targetWidth = targetImage.width;
+                        targetWidth = window.innerWidth * 0.666;
                     }
                     if (targetWidth < targetImage.width) {
-                        targetHeight = window.height;
+                        targetHeight = window.innerHeight * 0.666;
                     }
 
                     // append
@@ -176,19 +177,19 @@
                     newImage.width = targetWidth;
                     galleryImage.replaceChild(newImage, oldImage);
 
-                    npc.q('.gp-backdrop').classList.remove('is-hidden');
+                    npc.q('.gallery-popup').classList.remove('is-hidden');
                     npc.q('body').classList.add('no-scroll');
                 }
             })
 
-            npc.on(npc.q('.gp-img-actions'), 'click', e => {
+            npc.on(npc.q('.gallery-popup .controls'), 'click', e => {
                 if (e.target.dataset.action) {
                     e.preventDefault();
                     if (e.target.dataset.action === 'close') {
                         let galleryImage = npc.q('.gp-img-wrap');
                         let oldImage = galleryImage.querySelector('img');
                         galleryImage.replaceChild(new Image(), oldImage);
-                        npc.q('.gp-backdrop').classList.add('is-hidden');
+                        npc.q('.gallery-popup').classList.add('is-hidden');
                         npc.q('body').classList.remove('no-scroll'); 
                     }
                 }

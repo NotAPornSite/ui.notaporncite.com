@@ -17,66 +17,21 @@
         <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience and security.</p>
         <![endif]-->
 
-        <p id="message">--</p>
-
-        <div id="tester" style="height: 300px; width: 300px; background-color: hsl(0, 0%, 80%);"></div>
-
+        <div class="gallery-popup">
+            <div class="gp-content">
+                <div class="gp-img-wrap">
+                    <img src="http://jacobstevenwakefield.com:8080/images/YKRB8475.JPG"/>
+                </div>
+                <div class="controls">
+                    <a href="#">hello</a>
+                    <a href="#">hello</a>
+                    <a href="#">hello</a>
+                </div>
+            </div>
+        </div>
         <script src="./js/main.js"></script>
         <script>
-            let message = npc.q('#message'),
-                tester  = npc.q('#tester'),
-                events  = {};
-
-            function createElement(type, attrs, children) {
-
-            }
-            /*
-             * some experimenting with promises
-             */
-            function fnOne(pipe) {
-                return new Promise((resolve, reject) => {
-                    setTimeout(() => resolve(pipe + 'first,'), 2000);
-                })
-            }
-
-            function fnTwo(pipe) {
-                return new Promise((resolve, reject) => {
-                    setTimeout(() => resolve(pipe + 'secon,'), 2000);
-                })
-            }
-
-            // do the things
-            fnOne(';)>').then(pipe => fnTwo(pipe)).then(pipe => console.log(`${pipe} finale`));
-
-            /*
-             */
-
-            let then, now;
-            npc.on(tester, 'touchstart', e => {
-                then = Date.now();
-                events.touchstart = true;
-                update();
-            });
-
-            npc.on(tester, 'select', e => {
-                 now = Date.now();
-                 events.select = now - then;
-                 update();
-            });
-
-            npc.on(tester, 'touchend', e => {
-                events = {};
-                update();
-            })
             
-
-            function update() {
-                let msgFormatStr = '';
-                for (key in events) {
-                    msgFormatStr += `${key}: ${events[key]}\n`;
-                }
-                message.innerText = msgFormatStr;
-            }
         </script>
     </body>
 </html>
