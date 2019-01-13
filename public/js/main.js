@@ -127,9 +127,7 @@ const npc = (function() {
                 npc.pipe(
                     npc.addClass('gi-content'),
                     npc.addChild(
-                        npc.pipe(
-                            npc.addChild(npc.a('reddit', '#'))
-                        )(npc.p('source: '))
+                        npc.p('test')
                     )
                 )(npc.div())
             )

@@ -17,8 +17,16 @@
         <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience and security.</p>
         <![endif]-->
         <div class="gp-backdrop is-hidden">
-            <a class="action-close" href="#">close</a>
-            <img/>
+            <div class="gp-img">
+                <div class="gp-img-wrap">
+                    <img/>
+                </div>
+                <div class="gp-img-actions">
+                    <a data-action="download" href="#">download</a>
+                    <a data-action="save" href="#">save</a>
+                    <a data-action="close" href="#">close</a>
+                </div>
+            </div>
         </div>
         <section role="gallery" class="layout-container">
             <div class="gallery-wrapper">
@@ -139,36 +147,52 @@
 
             npc.on(galleryWrapper, 'click', e => {
                 if (e.target.src) {
-                    let galleryItem = e.target,
-                        galleryPopup = npc.q('.gp-backdrop');
-                        targetWidth = 1,
-                        targetHeight = targetWidth * (galleryItem.height / galleryItem.width);
+                    let oldImage, targetImage, targetWidth, targetHeight, galleryPopup;
                     
-                    galleryPopup.classList.remove('is-hidden');
-                    npc.q('html').classList.add('no-scroll');
-                    while (targetHeight < window.innerHeight * 0.8
-                        && targetWidth < window.innerWidth * 0.8) {
+                    galleryImage = npc.q('.gp-img-wrap');
+                    targetImage  = e.target;
+                    oldImage     = galleryImage.querySelector('img');
+                    newImage     = npc.img();
+                    targetWidth  = 1; // arbitrary constraint on image?
+                    targetHeight = targetWidth * (targetImage.height / targetImage.width);
+                    
+                    // calc full view image
+                    while (targetWidth <= window.innerWidth * 0.8
+                        && targetHeight <= window.innerHeight * 0.64) {
                         targetWidth += 1;
-                        targetHeight = targetWidth * (galleryItem.height / galleryItem.width);
+                        targetHeight = targetWidth * (targetImage.height / targetImage.width);
                     }
-                    let newImage = new Image();
-                    let oldImage = galleryPopup.querySelector('img');
-                    newImage.addEventListener('load', e => {
-                        galleryPopup.replaceChild(newImage, oldImage)
-                    });
-                    newImage.src = galleryItem.src;
-                    newImage.height = targetHeight;
+
+                    // check if overflow is required
+                    if (targetHeight < targetImage.height) {
+                        targetWidth = targetImage.width;
+                    }
+                    if (targetWidth < targetImage.width) {
+                        targetHeight = window.height;
+                    }
+
+                    // append
+                    newImage.src = targetImage.src;
+                    newImage.width = targetWidth;
+                    galleryImage.replaceChild(newImage, oldImage);
+
+                    npc.q('.gp-backdrop').classList.remove('is-hidden');
+                    npc.q('body').classList.add('no-scroll');
                 }
             })
 
-            npc.on(npc.q('.action-close'), 'click', e => {
-                e.preventDefault();
-                let galleryPopup = npc.q('.gp-backdrop'),
-                    galleryImage = galleryPopup.querySelector('img');
-                galleryPopup.classList.add('is-hidden');
-                npc.q('html').classList.remove('no-scroll');
-                galleryPopup.replaceChild(npc.img(), galleryImage);
-            })
+            npc.on(npc.q('.gp-img-actions'), 'click', e => {
+                if (e.target.dataset.action) {
+                    e.preventDefault();
+                    if (e.target.dataset.action === 'close') {
+                        let galleryImage = npc.q('.gp-img-wrap');
+                        let oldImage = galleryImage.querySelector('img');
+                        galleryImage.replaceChild(new Image(), oldImage);
+                        npc.q('.gp-backdrop').classList.add('is-hidden');
+                        npc.q('body').classList.remove('no-scroll'); 
+                    }
+                }
+            });
 
             npc.on(window, 'resize', e => {
                 let currentBreakpoint = npc.getBreakpoint();
@@ -182,7 +206,7 @@
             window.addEventListener('scroll', e => {
                 // this won't work in IE probs (& also probs a better way)
                 let yFromBottm = document.body.clientHeight - window.scrollY;
-                if (yFromBottm <= window.innerHeight * 1.5) {
+                if (yFromBottm <= window.innerHeight * 2) {
                     if (!updating) {
                         loadItemsAndUpdate();
                         console.log(items);

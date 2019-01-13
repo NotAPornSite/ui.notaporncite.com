@@ -270,7 +270,7 @@ h1.modal-title {
     position: relative;
     overflow: hidden;
     height: auto;
-    max-height: 600px;
+    max-height: 450px;
     cursor: pointer;
 }
 
@@ -302,7 +302,7 @@ h1.modal-title {
 
 /* gallery popup */
 
-html.no-scroll {
+.no-scroll {
     overflow: hidden;
 }
 
@@ -315,19 +315,41 @@ html.no-scroll {
     align-items: center;
     justify-content: center;
     z-index: 1;
-    overflow: hidden;
+    overflow-x: hidden;
+    overflow-y: auto;
 }
 
 .gp-backdrop.is-hidden {
     display: none;
 }
 
-.gp-backdrop a.action-close {
+.gp-img {
+    width: 80%;
+    height: 100%;
+    max-height: 80%;
+    overflow: hidden;
+    text-align: center;
+    position: relative;
+}
+
+.gp-img-wrap {
+    width: 100%;
+    max-height: 80%;
+    overflow: scroll;
+    background-color: hsla(0, 0%, 0%, 0.5);
+}
+
+.gp-img-actions {
+    background-color: hsl(0, 0%, 0%, 0.1);
+    width: 100%;
+    padding: 1em 0;
+}
+
+.gp-img-actions a {
     color: hsl(0, 0%, 90%);
-    position: absolute;
-    top: 1em;
     right: 1em;
     font-weight: 200;
+    margin: 0 1em;
     text-decoration: underline;
 }
 
