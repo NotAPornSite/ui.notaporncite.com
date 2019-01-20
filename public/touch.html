@@ -17,21 +17,128 @@
         <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience and security.</p>
         <![endif]-->
 
-        <div class="gallery-popup">
-            <div class="gp-content">
-                <div class="gp-img-wrap">
-                    <img src="http://jacobstevenwakefield.com:8080/images/YKRB8475.JPG"/>
-                </div>
-                <div class="controls">
-                    <a href="#">hello</a>
-                    <a href="#">hello</a>
-                    <a href="#">hello</a>
-                </div>
+        <div class="layout-container">
+            <p>Type to search for existing tags. Typing space will create a new category if it does not exist</p>
+        </div>
+        <div class="multi-select">
+            <div class="ms-tag-bar">
+                <span class="tag empty">x</span>
+                <div class="ms-tags"></div>
+            </div>
+            <input type="hidden" name="ms-val"/>
+            <input class="ms-text" type="text" />
+            <div class="ms-options is-hidden">
+                <ul></ul>
             </div>
         </div>
         <script src="./js/main.js"></script>
         <script>
-            
+            'use strict';
+            let opts = npc.q('.ms-options');
+            let tags = npc.q('.ms-tag-bar');
+            let cats = [];
+
+            tags.addEventListener('click', e => {
+                if (e.target.classList.contains('x')) {
+                    let hidden = npc.q('input[type="hidden"]');
+                    let values = hidden.value ? hidden.value.split(',') : [];
+                    let tag = e.target.parentNode;
+                    values = values.filter(val => val !== e.target.dataset.name);
+                    hidden.value = values.join(',');
+                    tag.parentNode.removeChild(tag);
+                }
+            });
+
+            opts.addEventListener('click', e => {
+                if (e.target.nodeName === 'LI') {
+                    addValue(e.target.innerText);
+                    cats = cats.filter(cat => cat.name !== e.target.innerText);
+                    append(cats).highlight(npc.q('input[type="text"].ms-text').value);
+                }
+            });
+
+            opts.addEventListener('blur', e => {
+                opts.classList.add('is-hidden');
+            });
+
+            npc.q('input[type="text"].ms-text').addEventListener('input', e => {
+                let data = e.data, value = e.target.value;
+                if (data === ' ') {
+                    addValue(value);
+                    e.target.value = '';
+                    cats = cats.filter(cat => cat.name !== value);
+                    append(cats).highlight('');
+                }
+                else if (value.length > 0) {
+                    opts.classList.remove('is-hidden');
+                    npc.getCategoriesLike(value).then(function(data) {
+                        cats = data;
+                        append(cats).highlight(value);
+                    })
+                }
+                else if (value.length === 0) {
+                    opts.classList.add('is-hidden');
+                    cats = [];
+                }
+            });
+
+            function append(cats) {
+                return {
+                    highlight: (value) => {
+                        opts.classList.remove('is-hidden');
+                        let newList = document.createElement('ul'),
+                            oldList = opts.querySelector('ul'),
+                            hidden = npc.q('input[type="hidden"]'),
+                            selected = hidden.value ? hidden.value.split(',') : [];
+                        if (cats.length === 0) {
+                            newList.innerText = 'No results';
+                            opts.replaceChild(newList, oldList);
+                            return;
+                        }
+                        cats.filter(cat => !selected.includes(cat.name)).forEach(cat => {
+                            value = value.toLowerCase();
+                            let li = document.createElement('li');
+                            let indexOfVal = cat.name.indexOf(value);
+                            let boldText = `<b>${value}</b>`;
+                            let innerText = `${cat.name.substring(0, indexOfVal)}${boldText}${cat.name.substring(indexOfVal + value.length)}`;
+                            li.innerHTML = innerText;
+                            newList.appendChild(li);
+                        });
+                        opts.replaceChild(newList, oldList);
+                    }
+                };
+            }
+
+            function addValue(value) {
+                value = value.trim().toLowerCase();
+                let span = npc.span(value),
+                    x    = npc.span('x');
+                span.classList.add('tag');
+                x.classList.add('x');
+                x.dataset.name = value;
+                span.prepend(x);
+                npc.q('.ms-tags').prepend(span);
+                updateFormValue(value);
+            }
+
+            function updateFormValue(value) {
+                let hidden = npc.q('input[type="hidden"]');
+                let values = hidden.value ? hidden.value.split(',') : [];
+                values.push(value);
+                hidden.value = values.join(',');
+            }
+
+            function appendOptions(cats) {
+                opts.classList.remove('is-hidden');
+                let newList = document.createElement('ul'),
+                    oldList = opts.querySelector('ul');
+                for (let i in cats) {
+                    let li = document.createElement('li');
+                    li.innerText = cats[i].name;
+                    newList.appendChild(li);
+                }
+                opts.replaceChild(newList, oldList);
+            }
         </script>
     </body>
 </html>

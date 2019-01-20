@@ -356,3 +356,109 @@ h1.modal-title {
     overflow: hidden;
 }
 
+/* Special form elements
+ */
+
+.multi-select {
+    position: relative;
+    padding: 0.5em;
+    width: 100%;
+}
+.ms-tag-bar {
+    overflow-x: scroll;
+    max-height: 50px;
+}
+
+.ms-tags {
+    display: flex;
+    flex-wrap: nowrap;
+}
+
+.tag {
+    color: hsla(0, 0%, 100%, 0.95);
+    display: inline-block;
+    padding: 0.5em 0.8em 0.5em 0.7em;
+    font-weight: 200;
+    font-size: 1em;
+    margin-right: 8px;
+    margin-bottom: 0.3em;
+    border-radius: 5px;
+    background-color: rgb(95, 205, 241);
+    /* background: linear-gradient(105deg, rgba(62,168,203,1) 0%, rgba(97,194,226,1) 100%); */
+    border: 2px solid rgba(97,194,226,1);
+    box-shadow: 0 1px 2px hsla(0, 0%, 0%, 0.2);
+    flex-shrink: 0;
+}
+
+.tag .x {
+    cursor: pointer;
+    display: inline-block;
+    height: 14px;
+    width: 14px;
+    background-color: hsla(0, 0%, 100%, 0.5);
+    color: hsla(0, 0%, 0%, 0.5);
+    text-align: center;
+    margin-right: 0.6em;
+    font-size: 0.75em;
+    border-radius: 50%;
+    font-weight: 400;
+    line-height: 12px;
+    vertical-align: middle;
+}
+
+.tag.empty {
+    float: left;
+    visibility: hidden;
+    width: 0px;
+    padding: 0;
+    padding: 0.5em 0;
+    overflow: hidden;
+    margin-right: 0px;
+    border: 2px solid white;
+    border-right: none;
+    border-left: none;
+}
+
+input[type="text"].ms-text {
+    border: none;
+    outline: none;
+    display: block;
+    width: 100%;
+    font-size: 1em;
+    --webkit-appearance: none;
+    border: 1px solid hsl(0, 0%, 20%);
+    border-radius: 3px;
+    padding: 0.5em 0.8em 0.5em 0.3em;
+}
+
+.ms-options {
+    position: absolute;
+    top: 100%;
+    border-radius: 2px;
+    background-color: hsl(0, 0%, 10%);
+    padding: 0.333em 0.12em;
+    width: calc(100% - 1em);
+    box-shadow: 0 1px 2px hsla(0, 0%, 0%, 0.2);
+}
+
+.ms-options.is-hidden {
+    display: none;
+}
+
+.ms-options ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    background-color: white;
+}
+
+.ms-options ul li {
+    cursor: pointer;
+    padding: 0.5em 0.25em;
+    border-bottom: 1px solid hsl(0, 0%, 80%);
+    color: hls(0, 0%, 10%);
+}
+
+.ms-options ul li:hover {
+    background-color: #f6f6fa;
+}

@@ -15,6 +15,7 @@ const express = require('express'),
       app     = express();
 
 const Resource = require('./modules/Resource.js');
+const Category = require('./modules/Category.js');
 
 const pageCount = 15;
 
@@ -38,13 +39,23 @@ app.get('/items', async (req, res) => {
     let page = req.query.page || 0;
     Resource.query()
         .where('type', '=', 'image')
-        .orderBy('id', 'desc')
+        .orderBy('id', 'asc')
         .limit(pageCount)
         .offset(pageCount*page)
         .then(items => {
             res.json(items);
         })
 });
+
+app.get('/categories', async (req, res) => {
+    let {q} = req.query;
+    if (!q) {
+        console.log('nope');
+        return res.json([]);
+    }
+    let categories = await Category.query().where('name', 'like', `${q}%`);
+    res.json(categories);
+})
 
 // LETS GO
 app.listen(process.env.PORT, () => console.log(`listening on port ${process.env.PORT}!`) )

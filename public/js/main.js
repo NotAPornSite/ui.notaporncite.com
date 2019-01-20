@@ -88,6 +88,21 @@ const npc = (function() {
         });
     }
 
+    let getCategoriesLike = q => {
+        return new Promise(function(resolve, reject) {
+            let xhr = new XMLHttpRequest();
+            xhr.addEventListener('load', function(e) {
+                if (this.status === 200) {
+                    resolve(JSON.parse(this.responseText));
+                } else {
+                    reject(this.status);
+                }
+            });
+            xhr.open('GET', `/categories?q=${q}`);
+            xhr.send();
+        })
+    }
+
     const nearestHundred = num => Math.round(num/100) * 100;
 
     const breakPoints = {
@@ -150,6 +165,7 @@ const npc = (function() {
         addClass,
         addChild,
         item,
-        pipe
+        pipe,
+        getCategoriesLike
     };
 })();
